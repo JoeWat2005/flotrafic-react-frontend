@@ -15,8 +15,7 @@ const OPTIONS = [
       "Mobile-friendly and fast-loading",
       "Simple contact forms",
     ],
-    footer:
-      "You handle enquiries — this gives you a strong online foundation.",
+    footer: "A professional website that gives your business a clear online presence."
   },
   {
     key: "enquiries",
@@ -32,8 +31,8 @@ const OPTIONS = [
       "Email notifications",
       "Organised customer messages",
     ],
-    footer:
-      "You still handle customers — just with better tools.",
+    footer: "A website with enquiry forms and online booking built in."
+
   },
   {
     key: "calls",
@@ -41,7 +40,7 @@ const OPTIONS = [
     icon: Phone,
     title: "AI Enquiries, Booking & Calls",
     description:
-      "The full setup — AI handles enquiries, bookings, and phone calls automatically, even when you’re unavailable.",
+      "The full setup: AI handles enquiries, bookings, and phone calls automatically, even when you’re unavailable.",
     points: [
       "AI-managed customer enquiries",
       "AI booking and scheduling",
@@ -49,12 +48,9 @@ const OPTIONS = [
       "Calendar and CRM integrations",
       "New features added automatically",
     ],
-    footer:
-      "AI handles customer contact so you can focus on your business.",
+    footer: "A fully automated system that handles enquiries, bookings, and calls for you."
   },
 ];
-
-
 
 export default function WhatWeDo() {
   const [index, setIndex] = useState(0);
@@ -102,12 +98,20 @@ export default function WhatWeDo() {
 
         {/* Card */}
         <div className="max-w-3xl mx-auto">
-          <div className="relative min-h-[470px]">
+          {/* 🔒 Fixed container height to fit LARGEST card */}
+          <div className="relative min-h-[520px] sm:min-h-[500px]">
             <div
               key={current.key}
-              className="absolute inset-0 border rounded-2xl p-8 shadow-lg bg-white animate-content-in"
+              className="
+                absolute inset-0
+                border rounded-2xl
+                bg-white shadow-lg
+                p-6 sm:p-8
+                animate-content-in
+                overflow-y-auto
+              "
             >
-              {/* Centered icon */}
+              {/* Icon */}
               <div className="flex justify-center mb-4">
                 <Icon className="h-9 w-9 text-indigo-600" />
               </div>
@@ -139,6 +143,8 @@ export default function WhatWeDo() {
     </section>
   );
 }
+
+
 
 
 
