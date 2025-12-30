@@ -30,3 +30,8 @@
   animation: contentIn 0.45s ease-out both;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+
