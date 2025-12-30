@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
-@keyframes fadeInUp {
+/* ===== Page / hero fade ===== */
+@keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(16px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
 .animate-fade-in {
-  animation: fadeInUp 0.6s ease-out both;
+  animation: fadeIn 0.6s ease-out both;
 }
 
+/* ===== Content fade (subtext, buttons) ===== */
 @keyframes contentIn {
   from {
     opacity: 0;
@@ -30,8 +30,23 @@
   animation: contentIn 0.45s ease-out both;
 }
 
+/* ===== Word-by-word headline animation ===== */
+@keyframes wordFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-word {
+  opacity: 0;
+  animation: wordFadeIn 0.25s ease-out forwards;
+}
+
+/* ===== Misc ===== */
 html {
   scroll-behavior: smooth;
 }
-
 
