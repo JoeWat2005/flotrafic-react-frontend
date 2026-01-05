@@ -1,33 +1,44 @@
-import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import Layout from "./Layout";
+import Dashboard from "./Dashboard";
 
-import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import WhatWeDo from "./components/WhatWeDo";
 import Features from "./components/Features";
 import Pricing from "./components/Pricing";
 import CTA from "./components/CTA";
 import Footer from "./components/Footer";
-import ContactModal from "./components/ContactModal";
 
-export default function App() {
-  const [contactOpen, setContactOpen] = useState(false);
-
+function Home({ onGetStarted }: { onGetStarted: () => void }) {
   return (
-    <div className="bg-white text-gray-900">
-      <Navbar onContact={() => setContactOpen(true)} />
-      <Hero onContact={() => setContactOpen(true)} />
+    <>
+      <Hero onGetStarted={onGetStarted} />
       <WhatWeDo />
       <Features />
       <Pricing />
-      <CTA onContact={() => setContactOpen(true)} />
+      <CTA onGetStarted={onGetStarted} />
       <Footer />
-
-      {/* Contact modal (mounted once) */}
-      <ContactModal
-        open={contactOpen}
-        onClose={() => setContactOpen(false)}
-      />
-    </div>
+    </>
   );
 }
+
+export default function App() {
+  return (
+    <Layout>
+      {(openAuth) => (
+        <Routes>
+          <Route path="/" element={<Home onGetStarted={openAuth} />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Routes>
+      )}
+    </Layout>
+  );
+}
+
+
+
+
+
+
+
 
