@@ -8,13 +8,12 @@ interface Me {
   is_active: boolean;
 }
 
-export default function Dashboard() {
+export default function DashboardOverview() {
   const [me, setMe] = useState<Me | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     if (!token) {
       window.location.href = "/";
       return;
@@ -29,7 +28,7 @@ export default function Dashboard() {
         if (!res.ok) throw new Error("Unauthorized");
         return res.json();
       })
-      .then((data) => setMe(data))
+      .then(setMe)
       .catch(() => {
         localStorage.removeItem("token");
         window.location.href = "/";
@@ -37,23 +36,26 @@ export default function Dashboard() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <p style={{ padding: 32 }}>Loading…</p>;
+  if (loading) return <p>Loading…</p>;
   if (!me) return null;
 
   return (
-    <div style={{ padding: 32 }}>
+    <>
       <h1>Welcome back, {me.name} 👋</h1>
 
-      <div style={{ marginTop: 16, lineHeight: 1.8 }}>
-        <p>
-          <strong>Tier:</strong> {me.tier}
-        </p>
+      <div style={{ marginTop: 24, lineHeight: 1.8 }}>
+        <p><strong>Tier:</strong> {me.tier}</p>
         <p>
           <strong>Status:</strong>{" "}
           {me.is_active ? "Active" : "Suspended"}
         </p>
       </div>
-    </div>
+
+      <div style={{ marginTop: 32, display: "flex", gap: 24 }}>
+        <div className="card">📩 Enquiries (coming next)</div>
+        <div className="card">📅 Bookings</div>
+        <div className="card">💳 Billing</div>
+      </div>
+    </>
   );
 }
-

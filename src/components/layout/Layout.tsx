@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import Navbar from "./components/Navbar";
-import AuthModal from "./components/AuthModal";
+import Navbar from "./Navbar";
+import AuthModal from "../../features/auth/AuthModal";
 
 interface LayoutProps {
   children: (openAuth: () => void) => React.ReactNode;
@@ -24,20 +24,12 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <>
-      <Navbar
-        isAuthed={isAuthed}
-        onLogin={openAuth}
-        onLogout={logout}
-      />
-
+      <Navbar isAuthed={isAuthed} onLogin={openAuth} onLogout={logout} />
       {children(openAuth)}
-
-      <AuthModal
-        open={authOpen}
-        onClose={() => setAuthOpen(false)}
-      />
+      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </>
   );
 }
+
 
 

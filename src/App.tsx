@@ -1,13 +1,18 @@
 import { Routes, Route } from "react-router-dom";
-import Layout from "./Layout";
-import Dashboard from "./Dashboard";
+import Layout from "./components/layout/Layout";
 
-import Hero from "./components/Hero";
-import WhatWeDo from "./components/WhatWeDo";
-import Features from "./components/Features";
-import Pricing from "./components/Pricing";
-import CTA from "./components/CTA";
-import Footer from "./components/Footer";
+import Hero from "./components/marketing/Hero";
+import Features from "./components/marketing/Features";
+import Pricing from "./components/marketing/Pricing";
+import WhatWeDo from "./components/marketing/WhatWeDo";
+import CTA from "./components/marketing/CTA";
+import Footer from "./components/layout/Footer";
+
+import DashboardLayout from "./pages/dashboard/DashboardLayout";
+import DashboardOverview from "./pages/dashboard/DashboardOverview";
+import DashboardEnquiries from "./pages/dashboard/DashboardEnquiries";
+import DashboardBookings from "./pages/dashboard/DashboardBookings";
+import DashboardBilling from "./pages/dashboard/DashboardBilling";
 
 function Home({ onGetStarted }: { onGetStarted: () => void }) {
   return (
@@ -28,12 +33,19 @@ export default function App() {
       {(openAuth) => (
         <Routes>
           <Route path="/" element={<Home onGetStarted={openAuth} />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+
+          <Route path="/dashboard" element={<DashboardLayout />}>
+            <Route index element={<DashboardOverview />} />
+            <Route path="enquiries" element={<DashboardEnquiries />} />
+            <Route path="bookings" element={<DashboardBookings />} />
+            <Route path="billing" element={<DashboardBilling />} />
+          </Route>
         </Routes>
       )}
     </Layout>
   );
 }
+
 
 
 

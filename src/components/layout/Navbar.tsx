@@ -1,4 +1,4 @@
-import logo from "../assets/flotrafic.png";
+import logo from "../../assets/flotrafic.png";
 
 interface NavbarProps {
   isAuthed: boolean;
