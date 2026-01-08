@@ -9,8 +9,8 @@ export default function Hero({ onGetStarted }: HeroProps) {
   return (
     <section className="min-h-[85vh] flex items-center bg-gradient-to-b from-gray-50 to-white animate-fade-in">
       <div className="max-w-6xl mx-auto text-center px-6 w-full">
-        <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-10 leading-[1.25]">
-          <div>
+        <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-10 leading-[1.25] break-normal whitespace-normal">
+          <div className="flex flex-wrap justify-center">
             {line1.map((word, i) => (
               <span
                 key={word}
