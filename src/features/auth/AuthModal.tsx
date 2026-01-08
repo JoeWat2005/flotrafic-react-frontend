@@ -13,7 +13,9 @@ export default function AuthModal({ open, onClose }: any) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
   const [tier, setTier] = useState("foundation");
+
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaKey, setCaptchaKey] = useState(0); // 🔁 force Turnstile refresh
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,13 +31,15 @@ export default function AuthModal({ open, onClose }: any) {
   }, [open]);
 
   useEffect(() => {
+    // Reset state when switching modes
     setError(null);
     setCaptchaToken(null);
+    setCaptchaKey((k) => k + 1);
   }, [mode]);
 
   if (!open) return null;
 
-  /* ---------- validation ---------- */
+  /* ---------- validation helpers ---------- */
 
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const passwordsMatch = password === confirmPassword;
@@ -102,9 +106,11 @@ export default function AuthModal({ open, onClose }: any) {
 
         if (!res.ok) {
           const err = await res.json();
+
           if (Array.isArray(err.detail)) {
             throw new Error(err.detail.map((e: any) => e.msg).join(", "));
           }
+
           throw new Error(err.detail || "Signup failed");
         }
 
@@ -112,7 +118,10 @@ export default function AuthModal({ open, onClose }: any) {
         window.location.href = data.checkout_url;
       }
     } catch (e: any) {
+      // 🔁 AUTO-REFRESH CAPTCHA ON ANY ERROR
       setError(e.message);
+      setCaptchaToken(null);
+      setCaptchaKey((k) => k + 1);
     } finally {
       setLoading(false);
     }
@@ -135,7 +144,7 @@ export default function AuthModal({ open, onClose }: any) {
           </button>
 
           <h2 className="mb-6 text-2xl font-bold">
-            {mode === "login" ? "Login" : "Create your account"}
+            {mode === "login" ? "Log in" : "Create your account"}
           </h2>
 
           <div className="space-y-4">
@@ -144,7 +153,7 @@ export default function AuthModal({ open, onClose }: any) {
                 placeholder="Business name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-lg border px-4 py-3 focus:ring-2 focus:ring-indigo-500"
+                className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             )}
 
@@ -154,7 +163,7 @@ export default function AuthModal({ open, onClose }: any) {
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className={`w-full rounded-lg border px-4 py-3 focus:ring-2 ${
+                className={`w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 ${
                   email && !emailValid
                     ? "border-red-400 focus:ring-red-400"
                     : "focus:ring-indigo-500"
@@ -169,13 +178,17 @@ export default function AuthModal({ open, onClose }: any) {
               </div>
             </div>
 
-            {/* Password strength */}
+            {/* Password strength (signup) */}
             {mode === "signup" && (
               <div className="min-h-[20px] text-sm text-gray-600">
                 Password Strength:{" "}
                 <span
                   className={
-                    strength >= 2 ? "text-green-600" : "text-orange-600"
+                    strength >= 3
+                      ? "text-green-600"
+                      : strength >= 2
+                      ? "text-orange-500"
+                      : "text-red-500"
                   }
                 >
                   {["Weak", "Okay", "Good", "Strong"][strength]}
@@ -194,8 +207,10 @@ export default function AuthModal({ open, onClose }: any) {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className={`w-full rounded-lg border px-4 py-3 focus:ring-2 ${
-                mode === "signup" && confirmPassword && !passwordsMatch
+              className={`w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 ${
+                mode === "signup" &&
+                confirmPassword &&
+                !passwordsMatch
                   ? "border-red-400 focus:ring-red-400"
                   : "focus:ring-indigo-500"
               }`}
@@ -209,7 +224,7 @@ export default function AuthModal({ open, onClose }: any) {
                   placeholder="Confirm password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className={`w-full rounded-lg border px-4 py-3 focus:ring-2 ${
+                  className={`w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 ${
                     confirmPassword && !passwordsMatch
                       ? "border-red-400 focus:ring-red-400"
                       : "focus:ring-indigo-500"
@@ -234,7 +249,7 @@ export default function AuthModal({ open, onClose }: any) {
                 <select
                   value={tier}
                   onChange={(e) => setTier(e.target.value)}
-                  className="w-full rounded-lg border px-4 py-3.5 text-base focus:ring-2 focus:ring-indigo-500"
+                  className="w-full rounded-lg border px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="foundation">Foundation</option>
                   <option value="managed">Managed</option>
@@ -245,23 +260,26 @@ export default function AuthModal({ open, onClose }: any) {
 
             {/* Turnstile */}
             {mode === "signup" && (
-              <>
-                <div className="flex justify-center pt-2">
-                  <Turnstile
-                    sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
-                    onVerify={(token) => setCaptchaToken(token)}
-                    onError={() => setCaptchaToken(null)}
-                  />
-                </div>
+              <div className="flex justify-center pt-2">
+                <Turnstile
+                  key={captchaKey}
+                  sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                  onVerify={(token) => setCaptchaToken(token)}
+                  onError={() => {
+                    setCaptchaToken(null);
+                    setCaptchaKey((k) => k + 1);
+                  }}
+                />
+              </div>
+            )}
 
-                <p className="text-center text-xs text-gray-400">
-                  Protected by Cloudflare
-                </p>
-              </>
+            {mode === "signup" && (
+              <p className="text-center text-xs text-gray-400">
+                Protected by Cloudflare
+              </p>
             )}
           </div>
 
-          {/* CTA */}
           <button
             onClick={submit}
             disabled={
@@ -270,9 +288,9 @@ export default function AuthModal({ open, onClose }: any) {
               (mode === "login" && !loginValid)
             }
             className="
-              mt-4 mx-auto block w-fit px-8
-              rounded-lg bg-indigo-600 py-3
-              text-base font-medium text-white
+              mx-auto mt-6 block
+              rounded-lg bg-indigo-600 px-6 py-3
+              text-sm font-medium text-white
               disabled:opacity-40 disabled:cursor-not-allowed
             "
           >
@@ -284,10 +302,12 @@ export default function AuthModal({ open, onClose }: any) {
           </button>
 
           {error && (
-            <p className="mt-4 text-center text-sm text-red-600">{error}</p>
+            <p className="mt-4 text-center text-sm text-red-600">
+              {error}
+            </p>
           )}
 
-          <p className="mt-5 text-center text-sm">
+          <p className="mt-6 text-center text-sm">
             {mode === "login" ? (
               <button
                 onClick={() => setMode("signup")}
