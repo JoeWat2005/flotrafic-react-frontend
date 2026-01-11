@@ -1,89 +1,69 @@
-import { Users, PoundSterling, Rocket } from "lucide-react";
+import { Users, PoundSterling, Rocket, Check, ArrowRight } from "lucide-react";
 
 export default function Features() {
+  const features = [
+    {
+      title: "Professional Website",
+      description: "Get a stunning, mobile-optimized website that builds trust and showcases your services effectively.",
+      icon: Users,
+    },
+    {
+      title: "Enquiry Management",
+      description: "Centralize all your customer messages in one dashboard. Never miss a potential lead again.",
+      icon: Check,
+    },
+    {
+      title: "Automated Booking",
+      description: "Allow customers to book your services 24/7 based on your availability. Syncs with your calendar.",
+      icon: Rocket,
+    },
+  ];
+
   return (
-    <section className="relative py-32 overflow-hidden">
-      {/* Subtle background glow */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-1/2 left-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-500/10 blur-3xl" />
-      </div>
+    <section className="py-24 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Everything you need to grow
+          </h2>
+          <p className="text-lg text-gray-600">
+            We've combined the essential tools for service businesses into one simple platform.
+          </p>
+        </div>
 
-      <div className="max-w-6xl mx-auto px-6 text-center">
-        {/* Headline */}
-        <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight mb-10">
-          Built for small businesses
-          <br />
-
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600 font-semibold">
-            that want to avoid{" "}
-          </span>
-
-          <span className="relative inline-block">
-            <span className="relative z-10 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-700">
-              big overheads
-            </span>
-            <span
-              className="absolute left-0 right-0 -bottom-2 h-2 rounded-full
-                         bg-gradient-to-r from-indigo-600 to-purple-600
-                         opacity-35 animate-underline"
-            />
-          </span>
-        </h2>
-
-        {/* Subheading */}
-        <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-24 leading-relaxed">
-          We help small businesses look professional, handle enquiries efficiently,
-          and cut the time and cost of managing customers — without hiring extra staff.
-        </p>
-
-        {/* Highlights */}
-        <div className="grid md:grid-cols-3 gap-16 text-left">
-          {[
-            {
-              icon: Users,
-              title: "Who it’s for",
-              desc: "Trades, local services, and growing small businesses.",
-            },
-            {
-              icon: PoundSterling,
-              title: "Why we exist",
-              desc: "To reduce management costs and admin through smarter systems.",
-            },
-            {
-              icon: Rocket,
-              title: "Our ambition",
-              desc: "A simple all-in-one platform that grows with your business.",
-            },
-          ].map((item, i) => {
-            const Icon = item.icon;
-            return (
-              <div
-                key={i}
-                className="group flex gap-6 transition-all duration-300 hover:-translate-y-2"
-              >
-                {/* Icon halo */}
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-500/10 transition group-hover:bg-indigo-500/20">
-                  <Icon className="h-6 w-6 text-indigo-600 transition-transform duration-300 group-hover:scale-110" />
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">
-                    {item.title}
-                  </h3>
-                  <p className="text-gray-600 text-lg">
-                    {item.desc}
-                  </p>
-                </div>
+        <div className="grid md:grid-cols-3 gap-8">
+          {features.map((feature, i) => (
+            <div key={i} className="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+              <div className="h-12 w-12 bg-indigo-50 rounded-xl flex items-center justify-center mb-6 text-indigo-600">
+                <feature.icon className="h-6 w-6" />
               </div>
-            );
-          })}
+              <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
+              <p className="text-gray-600 leading-relaxed">
+                {feature.description}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-16 bg-indigo-900 rounded-3xl p-8 md:p-12 text-center text-white overflow-hidden relative">
+          <div className="relative z-10">
+            <h3 className="text-2xl md:text-3xl font-bold mb-4">Ready to modernize your business?</h3>
+            <p className="text-indigo-200 mb-8 max-w-2xl mx-auto">
+              Join hundreds of other service providers who have switched to Flotrafic.
+            </p>
+            <button 
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="inline-flex items-center gap-2 bg-white text-indigo-900 px-6 py-3 rounded-lg font-semibold hover:bg-indigo-50 transition-colors"
+            >
+              Get Started <ArrowRight className="h-4 w-4" />
+            </button>
+          </div>
+          
+          {/* Decorative circles */}
+          <div className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-indigo-800 rounded-full blur-3xl opacity-50 pointer-events-none" />
+          <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-64 h-64 bg-indigo-600 rounded-full blur-3xl opacity-50 pointer-events-none" />
         </div>
       </div>
     </section>
   );
 }
-
-
-
-
-

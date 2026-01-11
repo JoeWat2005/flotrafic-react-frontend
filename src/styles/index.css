@@ -1,52 +1,45 @@
 @import "tailwindcss";
 
-/* ===== Page / hero fade ===== */
-@keyframes fadeIn {
-  from {
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-white text-gray-900;
+  }
+}
+
+/* Custom Utilities */
+@layer utilities {
+  .glass {
+    @apply bg-white/80 backdrop-blur-md border-b border-gray-200/50;
+  }
+  
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
     opacity: 0;
+    transform: translateY(20px);
   }
-  to {
-    opacity: 1;
+  
+  .animate-delay-100 {
+    animation-delay: 0.1s;
   }
-}
+  
+  .animate-delay-200 {
+    animation-delay: 0.2s;
+  }
+  
+  .animate-delay-300 {
+    animation-delay: 0.3s;
+  }
 
-.animate-fade-in {
-  animation: fadeIn 0.6s ease-out both;
-}
-
-/* ===== Content fade (subtext, buttons) ===== */
-@keyframes contentIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-content-in {
-  animation: contentIn 0.45s ease-out both;
-}
-
-/* ===== Word-by-word headline animation ===== */
-@keyframes wordFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
-
-.animate-word {
-  opacity: 0;
-  animation: wordFadeIn 0.25s ease-out forwards;
-}
-
-/* ===== Misc ===== */
-html {
-  scroll-behavior: smooth;
-}
-

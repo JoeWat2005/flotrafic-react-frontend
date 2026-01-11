@@ -1,68 +1,36 @@
+import { ArrowRight, CheckCircle } from "lucide-react";
+
 interface HeroProps {
   onGetStarted: () => void;
 }
 
-const line1 = ["Turn", "website", "visitors"];
-const line2 = ["into", "paying", "customers"];
-
 export default function Hero({ onGetStarted }: HeroProps) {
   return (
-    <section className="min-h-[85vh] flex items-center bg-gradient-to-b from-gray-50 to-white animate-fade-in">
-      <div className="max-w-6xl mx-auto text-center px-6 w-full">
-        <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-10 leading-[1.25] break-normal whitespace-normal">
-          <div className="flex flex-wrap justify-center">
-            {line1.map((word, i) => (
-              <span
-                key={word}
-                className="mr-3 text-gray-900 animate-word"
-                style={{ animationDelay: `${i * 0.15}s` }}
-              >
-                {word}
-              </span>
-            ))}
-          </div>
+    <section className="relative pt-20 pb-32 overflow-hidden bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        
+        <div className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium text-indigo-600 bg-indigo-50 mb-8 border border-indigo-100">
+          <span className="flex h-2 w-2 rounded-full bg-indigo-600 mr-2"></span>
+          Now available for small businesses
+        </div>
 
-          <div className="mt-4 pb-1">
-            {line2.map((word, i) => {
-              const isCustomers = word === "customers";
-
-              return (
-                <span
-                  key={word}
-                  className={`mr-3 animate-word ${
-                    !isCustomers
-                      ? "bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600 font-semibold"
-                      : ""
-                  }`}
-                  style={{ animationDelay: `${(line1.length + i) * 0.12}s` }}
-                >
-                  {isCustomers ? (
-                    <span className="relative inline-block">
-                      <span className="relative z-10 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-700">
-                        customers
-                      </span>
-                      <span className="absolute left-0 right-0 -bottom-2 h-2.5 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 opacity-35 animate-underline" />
-                    </span>
-                  ) : (
-                    word
-                  )}
-                </span>
-              );
-            })}
-          </div>
+        <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-gray-900 mb-8 leading-tight">
+          Turn website visitors into <br className="hidden md:block" />
+          <span className="text-indigo-600">paying customers</span>
         </h1>
 
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-12 leading-relaxed">
-          We help small business owners set up their online infrastructure so customers
-          can easily find you, get in touch, and do business with you online.
+        <p className="mt-4 text-xl text-gray-500 max-w-3xl mx-auto mb-10 leading-relaxed">
+          We provide the complete digital infrastructure for your service business. 
+          Professional website, enquiry management, and booking automation — all in one place.
         </p>
 
-        <div className="flex justify-center items-center gap-4">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-16">
           <button
             onClick={onGetStarted}
-            className="bg-indigo-600 text-white px-8 py-4 rounded-xl text-lg font-semibold"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-semibold rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200"
           >
-            Get started
+            Get started today
+            <ArrowRight className="ml-2 h-5 w-5" />
           </button>
 
           <button
@@ -71,14 +39,30 @@ export default function Hero({ onGetStarted }: HeroProps) {
                 .getElementById("pricing")
                 ?.scrollIntoView({ behavior: "smooth" })
             }
-            className="px-8 py-4 rounded-xl text-lg font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 border border-gray-200 text-lg font-semibold rounded-xl text-gray-700 bg-white hover:bg-gray-50 transition-all"
           >
-            See pricing
+            View pricing
           </button>
         </div>
+
+        <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-sm font-medium text-gray-500">
+          <div className="flex items-center gap-2">
+            <CheckCircle className="h-5 w-5 text-indigo-600" />
+            <span>No technical skills required</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <CheckCircle className="h-5 w-5 text-indigo-600" />
+            <span>Set up in minutes</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <CheckCircle className="h-5 w-5 text-indigo-600" />
+            <span>Cancel anytime</span>
+          </div>
+        </div>
       </div>
+      
+      {/* Background decoration */}
+      <div className="absolute top-0 inset-x-0 h-64 bg-gradient-to-b from-indigo-50/50 to-transparent -z-10 pointer-events-none" />
     </section>
   );
 }
-
-

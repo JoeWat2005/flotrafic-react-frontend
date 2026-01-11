@@ -1,136 +1,102 @@
+import { Check, Shield, Zap, Layout } from "lucide-react";
+
 export default function Pricing() {
+  const plans = [
+    {
+      name: "Foundation",
+      price: "£10",
+      description: "Essential web presence.",
+      icon: Layout,
+      features: ["Custom Website", "Hosting & SSL", "Basic SEO", "Email Support"],
+      cta: "Get Started",
+      highlight: false,
+    },
+    {
+      name: "Managed",
+      price: "£29",
+      description: "We handle the updates.",
+      icon: Shield,
+      features: ["Everything in Foundation", "Enquiry Management", "1hr/mo Updates", "Priority Support"],
+      cta: "Start Free Trial",
+      highlight: true,
+    },
+    {
+      name: "Autopilot",
+      price: "£49",
+      description: "Complete automation.",
+      icon: Zap,
+      features: ["Everything in Managed", "Online Bookings", "Payments", "Account Manager"],
+      cta: "Contact Sales",
+      highlight: false,
+    },
+  ];
+
   return (
-    <section id="pricing" className="py-32 bg-gray-50">
-      <div className="max-w-6xl mx-auto px-6">
-        {/* Title */}
-        <h2 className="text-4xl font-bold text-center mb-16">
-          Pricing that scales with your business
-        </h2>
-
-        {/* Pricing rail */}
-        <div className="rounded-3xl border bg-white overflow-hidden">
-          {/* ===================== */}
-          {/* Website & Social */}
-          {/* ===================== */}
-          <div className="group grid md:grid-cols-3 gap-8 px-8 py-10 items-center transition hover:bg-gray-50">
-            <div>
-              <h3 className="text-xl font-semibold">
-                Website & Social
-              </h3>
-              <p className="text-gray-500 mt-1">
-                Professional setup to get you online.
-              </p>
-              <p className="text-sm text-gray-400 mt-1">
-                Matches the <strong>Foundation</strong> setup
-              </p>
-            </div>
-
-            <div className="text-gray-700">
-              <p className="text-2xl font-bold">£100</p>
-              <p className="text-sm text-gray-500">one-time setup</p>
-
-              <span className="inline-block mt-3 rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700">
-                £10 / month hosting
-              </span>
-            </div>
-
-            <ul className="text-gray-600 space-y-2">
-              <li>✓ Business website</li>
-              <li>✓ Social media linking</li>
-              <li>✓ Contact & enquiry forms</li>
-            </ul>
-          </div>
-
-          <div className="h-px bg-gray-200" />
-
-          {/* ===================== */}
-          {/* Enquiries & Booking */}
-          {/* ===================== */}
-          <div className="relative group grid md:grid-cols-3 gap-8 px-8 py-12 items-center bg-indigo-50/50 transition hover:bg-indigo-50">
-            {/* Most popular badge */}
-            <span className="absolute -top-3 left-8 rounded-full bg-indigo-600 px-3 py-1 text-xs font-semibold text-white shadow">
-              Most popular
-            </span>
-
-            <div>
-              <h3 className="text-xl font-semibold text-indigo-700">
-                Enquiries & Booking
-              </h3>
-              <p className="text-indigo-600 mt-1">
-                Reduce admin and capture more leads.
-              </p>
-              <p className="text-sm text-indigo-500 mt-1">
-                Matches the <strong>Managed</strong> setup
-              </p>
-            </div>
-
-            <div>
-              <p className="text-3xl font-bold text-indigo-700">
-                £50 / month
-              </p>
-              <p className="text-sm text-indigo-600 mt-1">
-                Includes Website & Social
-              </p>
-            </div>
-
-            <ul className="text-indigo-700 space-y-2">
-              <li>✓ Online enquiry forms</li>
-              <li>✓ Online booking & scheduling</li>
-              <li>✓ Email notifications</li>
-              <li>✓ Organised customer messages</li>
-            </ul>
-          </div>
-
-          <div className="h-px bg-gray-200" />
-
-          {/* ===================== */}
-          {/* Calls & Automation */}
-          {/* ===================== */}
-          <div className="relative group grid md:grid-cols-3 gap-8 px-8 py-10 items-center transition hover:bg-gray-50 opacity-90">
-            {/* Demand badge */}
-            <span className="absolute -top-3 left-8 rounded-full bg-gray-900 px-3 py-1 text-xs font-semibold text-white">
-              High demand
-            </span>
-
-            <div>
-              <h3 className="text-xl font-semibold">
-                Calls & Automation
-              </h3>
-              <p className="text-gray-500 mt-1">
-                Fully automated customer handling.
-              </p>
-              <p className="text-sm text-gray-400 mt-1">
-                Full <strong>Autopilot (AI)</strong> setup
-              </p>
-
-              <span className="inline-block mt-2 rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600">
-                Coming soon
-              </span>
-            </div>
-
-            <div>
-              <p className="text-2xl font-bold">
-                £95 / month
-              </p>
-            </div>
-
-            <ul className="text-gray-600 space-y-2">
-              <li>✓ AI-managed customer enquiries</li>
-              <li>✓ AI booking & scheduling</li>
-              <li>✓ AI phone call handling</li>
-              <li>✓ CRM & calendar integrations</li>
-            </ul>
-          </div>
+    <section id="pricing" className="py-24 bg-white border-t border-gray-100">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Simple, transparent pricing
+          </h2>
+          <p className="text-lg text-gray-600">
+            Choose the plan that fits your business stage. No hidden fees.
+          </p>
         </div>
 
-        {/* Clarifier */}
-        <p className="mt-8 text-center text-sm text-gray-500">
-          AI features are only included in the Autopilot (AI) plan.
-        </p>
+        <div className="grid md:grid-cols-3 gap-8">
+          {plans.map((plan, i) => (
+            <div 
+              key={i} 
+              className={`relative rounded-2xl p-8 transition-all ${
+                plan.highlight 
+                  ? "bg-white border-2 border-indigo-600 shadow-xl scale-105 z-10" 
+                  : "bg-gray-50 border border-gray-200 hover:border-gray-300"
+              }`}
+            >
+              {plan.highlight && (
+                <div className="absolute top-0 right-0 -mt-3 mr-6 px-3 py-1 bg-indigo-600 text-white text-xs font-bold rounded-full uppercase tracking-wide">
+                  Most Popular
+                </div>
+              )}
+
+              <div className="flex items-center gap-4 mb-6">
+                <div className={`p-3 rounded-lg ${plan.highlight ? 'bg-indigo-50 text-indigo-600' : 'bg-white text-gray-600 border border-gray-200'}`}>
+                  <plan.icon className="h-6 w-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">{plan.name}</h3>
+                  <p className="text-sm text-gray-500">{plan.description}</p>
+                </div>
+              </div>
+
+              <div className="flex items-baseline gap-1 mb-8">
+                <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
+                <span className="text-gray-500 font-medium">/month</span>
+              </div>
+
+              <ul className="space-y-4 mb-8">
+                {plan.features.map((feature, j) => (
+                  <li key={j} className="flex items-start gap-3">
+                    <Check className={`h-5 w-5 flex-shrink-0 ${plan.highlight ? 'text-indigo-600' : 'text-gray-400'}`} />
+                    <span className="text-gray-600">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <button 
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors ${
+                  plan.highlight 
+                    ? "bg-indigo-600 text-white hover:bg-indigo-700 shadow-md" 
+                    : "bg-white text-gray-900 border border-gray-200 hover:bg-gray-50"
+                }`}
+              >
+                {plan.cta}
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
 }
-
-
-
