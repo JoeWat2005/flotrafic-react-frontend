@@ -14,6 +14,11 @@ import DashboardEnquiries from "./pages/dashboard/DashboardEnquiries";
 import DashboardBookings from "./pages/dashboard/DashboardBookings";
 import DashboardBilling from "./pages/dashboard/DashboardBilling";
 
+import BusinessSite from "./pages/public/BusinessSite";
+
+/* -----------------------------
+   Marketing homepage component
+------------------------------ */
 function Home({ onGetStarted }: { onGetStarted: () => void }) {
   return (
     <>
@@ -27,7 +32,41 @@ function Home({ onGetStarted }: { onGetStarted: () => void }) {
   );
 }
 
+/* -----------------------------
+   App root
+------------------------------ */
 export default function App() {
+  const hostname = window.location.hostname;
+  const parts = hostname.split(".");
+
+  // e.g. bigmautos.flotrafic.local → ["bigmautos", "flotrafic", "local"]
+  const subdomain = parts.length > 2 ? parts[0] : null;
+
+  const RESERVED_SUBDOMAINS = ["flotrafic", "www", "api"];
+
+  const isBusinessSite =
+    subdomain !== null &&
+    hostname.includes("flotrafic.") &&
+    !RESERVED_SUBDOMAINS.includes(subdomain);
+
+  /* -----------------------------
+     BUSINESS WEBSITE MODE
+     <business>.flotrafic.*
+  ------------------------------ */
+  // DEV: localhost/<slug>
+  if (import.meta.env.DEV && hostname === "localhost" && window.location.pathname !== "/") {
+    return <BusinessSite />;
+  }
+
+  // PROD: <slug>.flotrafic.*
+  if (isBusinessSite) {
+    return <BusinessSite />;
+  }
+
+
+  /* -----------------------------
+     FLOTRAFIC MARKETING + DASHBOARD
+  ------------------------------ */
   return (
     <Layout>
       {(openAuth) => (
@@ -45,6 +84,7 @@ export default function App() {
     </Layout>
   );
 }
+
 
 
 
