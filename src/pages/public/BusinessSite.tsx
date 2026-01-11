@@ -1,26 +1,23 @@
-// src/site/BusinessSite.tsx
-
 import { useEffect, useState } from "react";
-import { getSlug } from "./slug";
+import { useParams } from "react-router-dom";
 import ErrorPage from "./ErrorPage";
+import { isReservedSlug } from "./slug";
 
 export default function BusinessSite() {
-  const slug = getSlug();
+  const { slug } = useParams<{ slug: string }>();
 
   const [name, setName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Missing slug → hard fail
-  if (!slug) {
+  // Missing or reserved slug → hard fail
+  if (!slug || isReservedSlug(slug)) {
     return <ErrorPage />;
   }
 
   useEffect(() => {
     setLoading(true);
 
-    fetch(
-      `${import.meta.env.VITE_API_URL}/public/business?slug=${slug}`
-    )
+    fetch(`${import.meta.env.VITE_API_URL}/public/business?slug=${slug}`)
       .then((res) => {
         if (!res.ok) throw new Error("Not found");
         return res.json();

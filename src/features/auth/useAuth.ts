@@ -173,8 +173,28 @@ export function useAuth(open: boolean, onClose?: () => void) {
         }
 
         const data = await res.json();
-        localStorage.setItem("token", data.access_token);
-        window.location.href = "/dashboard";
+        const token = data.access_token as string;
+
+        localStorage.setItem("token", token);
+
+        // ✅ Fetch /me to get the business slug (or name)
+        const meRes = await fetch("http://localhost:8000/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!meRes.ok) {
+          throw new Error("Login succeeded but failed to load account");
+        }
+
+        const me = await meRes.json();
+
+        const slug = me.slug as string;
+
+        if (!slug) {
+          throw new Error("Account has no slug");
+        }
+
+        window.location.href = `/${slug}/dashboard`;
         return;
       }
 
