@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Trash2 } from "lucide-react";
+import { Trash2, X, Calendar, User, Mail, MessageSquare } from "lucide-react";
 
 type EnquiryStatus = "new" | "in_progress" | "resolved";
 
@@ -49,15 +49,19 @@ function EnquiryCard({
   onRead,
   onStatus,
   onDelete,
+  onClick,
 }: {
   enquiry: Enquiry;
   onRead: (id: number) => void;
   onStatus: (id: number, status: EnquiryStatus) => void;
   onDelete: (id: number) => void;
+  onClick: () => void;
 }) {
   return (
-    <div className={`
-      rounded-xl border p-5 shadow-sm transition-all
+    <div 
+      onClick={onClick}
+      className={`
+      cursor-pointer rounded-xl border p-5 shadow-sm transition-all
       ${enquiry.is_read ? "bg-white border-gray-200" : "bg-blue-50/50 border-blue-100 ring-1 ring-blue-100"}
     `}>
       <div className="flex justify-between items-start mb-3">
@@ -114,6 +118,7 @@ function EnquiryCard({
 
 export default function DashboardEnquiries() {
   const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
+  const [selectedEnquiry, setSelectedEnquiry] = useState<Enquiry | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -285,6 +290,7 @@ export default function DashboardEnquiries() {
                 onRead={markRead}
                 onStatus={updateStatus}
                 onDelete={deleteEnquiry}
+                onClick={() => setSelectedEnquiry(e)}
               />
             ))}
           </div>
@@ -305,7 +311,8 @@ export default function DashboardEnquiries() {
                 {enquiries.map((e) => (
                   <tr 
                     key={e.id} 
-                    className={`transition-colors hover:bg-gray-50 ${!e.is_read ? 'bg-blue-50/30' : ''}`}
+                    onClick={() => setSelectedEnquiry(e)}
+                    className={`cursor-pointer transition-colors hover:bg-gray-50 ${!e.is_read ? 'bg-blue-50/30' : ''}`}
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <select
@@ -363,6 +370,83 @@ export default function DashboardEnquiries() {
             </table>
           </div>
         </>
+      )}
+
+      {/* Detail Modal */}
+      {selectedEnquiry && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 animate-in fade-in zoom-in duration-200">
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                  Enquiry Details
+                  <StatusBadge status={selectedEnquiry.status} />
+                </h2>
+                <p className="text-sm text-gray-500 mt-1">
+                  Received on {new Date(selectedEnquiry.created_at).toLocaleString()}
+                </p>
+              </div>
+              <button 
+                onClick={() => setSelectedEnquiry(null)}
+                className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100 transition-colors"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row gap-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
+                <div className="flex-1 flex items-center gap-3">
+                   <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                      <User className="h-5 w-5" />
+                   </div>
+                   <div>
+                      <p className="text-xs font-medium text-gray-500 uppercase">Name</p>
+                      <p className="font-medium text-gray-900">{selectedEnquiry.name}</p>
+                   </div>
+                </div>
+                <div className="w-px bg-gray-200 hidden sm:block"></div>
+                <div className="flex-1 flex items-center gap-3">
+                   <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                      <Mail className="h-5 w-5" />
+                   </div>
+                   <div>
+                      <p className="text-xs font-medium text-gray-500 uppercase">Email</p>
+                      <a href={`mailto:${selectedEnquiry.email}`} className="font-medium text-indigo-600 hover:underline">
+                        {selectedEnquiry.email}
+                      </a>
+                   </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-sm font-medium text-gray-900 mb-3 flex items-center gap-2">
+                  <MessageSquare className="h-4 w-4 text-gray-400" />
+                  Message
+                </h3>
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 text-gray-700 whitespace-pre-wrap leading-relaxed">
+                  {selectedEnquiry.message}
+                </div>
+              </div>
+
+              <div className="flex justify-end pt-4 border-t border-gray-100 gap-3">
+                 <a 
+                   href={`mailto:${selectedEnquiry.email}`}
+                   className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium flex items-center gap-2"
+                 >
+                   <Mail className="h-4 w-4" />
+                   Reply via Email
+                 </a>
+                 <button
+                   onClick={() => setSelectedEnquiry(null)}
+                   className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium"
+                 >
+                   Close
+                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
