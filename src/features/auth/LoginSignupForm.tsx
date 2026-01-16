@@ -123,9 +123,8 @@ export function LoginSignupForm({
             onChange={(e) => setTier(e.target.value)}
             className="w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
-            <option value="foundation">Foundation</option>
-            <option value="managed">Managed</option>
-            <option value="autopilot">AI Autopilot</option>
+            <option value="free">Free</option>
+            <option value="pro">Pro</option>
           </select>
         </div>
       )}

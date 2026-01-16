@@ -1,4 +1,4 @@
-import { Users, PoundSterling, Rocket, Check, ArrowRight } from "lucide-react";
+import { Users, Rocket, Check, ArrowRight } from "lucide-react";
 
 export default function Features() {
   const features = [

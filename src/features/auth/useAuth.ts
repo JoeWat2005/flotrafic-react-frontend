@@ -12,7 +12,7 @@ export function useAuth(open: boolean, onClose?: () => void) {
 
   // login/signup
   const [name, setName] = useState("");
-  const [tier, setTier] = useState("foundation");
+  const [tier, setTier] = useState("free");
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -96,7 +96,7 @@ export function useAuth(open: boolean, onClose?: () => void) {
     setPassword("");
     setConfirmPassword("");
     setName("");
-    setTier("foundation");
+    setTier("free");
 
     setVerificationCode("");
     setCaptchaToken(null);
@@ -262,7 +262,18 @@ export function useAuth(open: boolean, onClose?: () => void) {
         const loginData = await loginRes.json();
         localStorage.setItem("token", loginData.access_token);
 
-        // Start Stripe checkout
+        // FREE TIER -> Dashboard
+        if (tier === "free") {
+          const meRes = await fetch("http://localhost:8000/me", {
+            headers: { Authorization: `Bearer ${loginData.access_token}` },
+          });
+          if (!meRes.ok) throw new Error("Failed to load account");
+          const me = await meRes.json();
+          window.location.href = `/${me.slug}/dashboard`;
+          return;
+        }
+
+        // PRO TIER -> Stripe
         const stripeRes = await fetch("http://localhost:8000/auth/start-checkout", {
           method: "POST",
           headers: {

@@ -1,33 +1,24 @@
-import { Check, Shield, Zap, Layout } from "lucide-react";
+import { Check, Zap, Layout } from "lucide-react";
 
 export default function Pricing() {
   const plans = [
     {
-      name: "Foundation",
-      price: "£10",
+      name: "Free",
+      price: "£0",
       description: "Essential web presence.",
       icon: Layout,
-      features: ["Custom Website", "Hosting & SSL", "Basic SEO", "Email Support"],
+      features: ["Custom Website", "Hosting & SSL", "Enquiry Management", "Online Bookings"],
       cta: "Get Started",
       highlight: false,
     },
     {
-      name: "Managed",
+      name: "Pro",
       price: "£29",
-      description: "We handle the updates.",
-      icon: Shield,
-      features: ["Everything in Foundation", "Enquiry Management", "1hr/mo Updates", "Priority Support"],
-      cta: "Start Free Trial",
-      highlight: true,
-    },
-    {
-      name: "Autopilot",
-      price: "£49",
       description: "Complete automation.",
       icon: Zap,
-      features: ["Everything in Managed", "Online Bookings", "Payments", "Account Manager"],
-      cta: "Contact Sales",
-      highlight: false,
+      features: ["Everything in Free", "AI Autopilot", "Priority Support"],
+      cta: "Start Free Trial",
+      highlight: true,
     },
   ];
 
@@ -43,7 +34,7 @@ export default function Pricing() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {plans.map((plan, i) => (
             <div 
               key={i} 

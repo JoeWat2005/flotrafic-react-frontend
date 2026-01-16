@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Check, CreditCard, Shield, Zap, Layout } from "lucide-react";
+import { Check, CreditCard, Shield, Layout } from "lucide-react";
 
 interface BillingOverview {
-  tier: "foundation" | "managed" | "autopilot";
+  tier: "free" | "pro";
   subscription_status: string | null;
   current_period_end: string | null;
   is_active: boolean;
@@ -10,17 +10,22 @@ interface BillingOverview {
 
 const PLANS = [
   {
-    id: "foundation",
+    id: "free",              // backend tier
     name: "Foundation",
-    price: "£10",
+    price: "£0",
     period: "/mo",
     description: "Essential web presence. Includes hosting & platform fee.",
-    features: ["Custom Business Website", "Hosting & SSL Certificate", "Basic SEO", "Standard Support"],
+    features: [
+      "Custom Business Website",
+      "Hosting & SSL Certificate",
+      "Basic SEO",
+      "Standard Support",
+    ],
     icon: Layout,
     color: "bg-gray-100 text-gray-600",
   },
   {
-    id: "managed",
+    id: "pro",               // backend tier
     name: "Managed",
     price: "£29",
     period: "/mo",
@@ -35,22 +40,8 @@ const PLANS = [
     color: "bg-indigo-100 text-indigo-600",
     popular: true,
   },
-  {
-    id: "autopilot",
-    name: "Autopilot",
-    price: "£49",
-    period: "/mo",
-    description: "Complete automation with bookings & payments.",
-    features: [
-      "Everything in Managed",
-      "Online Booking System",
-      "Stripe Payment Integration",
-      "Dedicated Account Manager",
-    ],
-    icon: Zap,
-    color: "bg-purple-100 text-purple-600",
-  },
 ];
+
 
 export default function DashboardBilling() {
   const [billing, setBilling] = useState<BillingOverview | null>(null);
@@ -124,7 +115,7 @@ export default function DashboardBilling() {
           <p className="text-gray-500">Manage your plan and payment methods.</p>
         </div>
         
-        {billing.tier !== "foundation" && (
+        {billing.tier !== "free" && (
           <button
             onClick={handlePortal}
             disabled={!!processing}
@@ -145,8 +136,7 @@ export default function DashboardBilling() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className={`p-3 rounded-lg ${
-              billing.tier === "autopilot" ? "bg-purple-100 text-purple-600" :
-              billing.tier === "managed" ? "bg-indigo-100 text-indigo-600" :
+              billing.tier === "free" ? "bg-purple-100 text-purple-600" :
               "bg-gray-100 text-gray-600"
             }`}>
               <Layout className="h-6 w-6" />
