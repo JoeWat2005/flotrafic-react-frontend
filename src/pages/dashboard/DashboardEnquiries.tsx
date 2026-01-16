@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Trash2, X, Calendar, User, Mail, MessageSquare } from "lucide-react";
+import { Trash2, X, User, Mail, MessageSquare } from "lucide-react";
 
 type EnquiryStatus = "new" | "in_progress" | "resolved";
 
@@ -177,30 +177,31 @@ export default function DashboardEnquiries() {
     }
   };
 
-  const updateStatus = async (
-    id: number,
-    status: EnquiryStatus
-  ) => {
-    try {
-      await fetch(
-        `${import.meta.env.VITE_API_URL}/enquiries/${id}/status?status=${status}`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+  const updateStatus = async (id: number, status: EnquiryStatus) => {
+  try {
+    await fetch(
+      `${import.meta.env.VITE_API_URL}/enquiries/${id}/status`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          status,
+        }),
+      }
+    );
 
-      setEnquiries((prev) =>
-        prev.map((e) =>
-          e.id === id ? { ...e, status } : e
-        )
-      );
-    } catch (err) {
-      console.error("Failed to update status", err);
-    }
-  };
+    setEnquiries((prev) =>
+      prev.map((e) =>
+        e.id === id ? { ...e, status } : e
+      )
+    );
+  } catch (err) {
+    console.error("Failed to update status", err);
+  }
+};
 
   const deleteEnquiry = async (id: number) => {
     if (!confirm("Are you sure you want to delete this enquiry? This cannot be undone.")) return;

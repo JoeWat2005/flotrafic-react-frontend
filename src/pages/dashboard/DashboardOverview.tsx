@@ -43,7 +43,7 @@ export default function DashboardOverview() {
           fetch(`${import.meta.env.VITE_API_URL}/enquiries/stats`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          fetch(`${import.meta.env.VITE_API_URL}/bookings/next`, {
+          fetch(`${import.meta.env.VITE_API_URL}/bookings/?sort=upcoming&limit=1`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
@@ -51,8 +51,8 @@ export default function DashboardOverview() {
         if (meRes.ok) setMe(await meRes.json());
         if (statsRes.ok) setStats(await statsRes.json());
         if (bookingRes.ok) {
-            const booking = await bookingRes.json();
-            if (booking) setNextBooking(booking);
+          const bookings = await bookingRes.json();
+          setNextBooking(bookings[0] ?? null);
         }
       } catch (err) {
         console.error(err);
