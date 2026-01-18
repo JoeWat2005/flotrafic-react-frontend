@@ -5,7 +5,9 @@ interface BillingOverview {
   tier: "free" | "pro";
   subscription_status: string | null;
   current_period_end: string | null;
+  cancel_at_period_end: boolean;
   is_active: boolean;
+  email_verified: boolean;
 }
 
 const PLANS = [
@@ -49,7 +51,6 @@ const PLANS = [
     popular: true,
   },
 ];
-
 
 export default function DashboardBilling() {
   const [billing, setBilling] = useState<BillingOverview | null>(null);
@@ -106,6 +107,37 @@ export default function DashboardBilling() {
       setProcessing(null);
     }
   };
+
+  const handleCancelAtPeriodEnd = async () => {
+  setProcessing("cancel");
+  try {
+    const token = localStorage.getItem("token");
+    await fetch(`${import.meta.env.VITE_API_URL}/billing/cancel`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    window.location.reload();
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setProcessing(null);
+  }
+};
+
+const handlePlanAction = async (planId: string, isCurrent: boolean) => {
+  if (isCurrent) return;
+
+  // Pro -> Free = cancel
+  if (planId === "free") {
+    await handleCancelAtPeriodEnd();
+    return;
+  }
+
+  // Free -> Pro = checkout
+  await handleCheckout(planId);
+};
+
+
 
   if (loading) return (
     <div className="flex items-center justify-center h-64">
@@ -210,8 +242,12 @@ export default function DashboardBilling() {
                 </ul>
 
                 <button
-                  onClick={() => !isCurrent && handleCheckout(plan.id)}
-                  disabled={isCurrent || !!processing}
+                  onClick={() => handlePlanAction(plan.id, isCurrent)}
+                  disabled={
+                    isCurrent ||
+                    !!processing ||
+                    (plan.id === "free" && billing.cancel_at_period_end)
+                  }
                   className={`w-full py-3 px-4 rounded-lg text-sm font-semibold transition-all ${
                     isCurrent
                       ? "bg-gray-100 text-gray-400 cursor-default"
@@ -227,6 +263,10 @@ export default function DashboardBilling() {
                       <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
                       Processing...
                     </span>
+                  ) : plan.id === "free" ? (
+                    billing.cancel_at_period_end
+                      ? "Cancels at period end"
+                      : "Switch Plan"
                   ) : isUpgrade ? (
                     "Upgrade"
                   ) : (
