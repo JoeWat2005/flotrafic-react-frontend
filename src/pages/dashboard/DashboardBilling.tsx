@@ -11,12 +11,16 @@ interface BillingOverview {
 const PLANS = [
   {
     id: "free",              // backend tier
-    name: "Foundation",
+    name: "Free",
     price: "£0",
     period: "/mo",
-    description: "Essential web presence. Includes hosting & platform fee.",
+    description: "Essential web presence. Completely free.",
     features: [
       "Custom Business Website",
+      "Custom Business Linktree",
+      "Website Editor",
+      "Email notifications",
+      "Basic Analytics",
       "Hosting & SSL Certificate",
       "Basic SEO",
       "Standard Support",
@@ -26,15 +30,19 @@ const PLANS = [
   },
   {
     id: "pro",               // backend tier
-    name: "Managed",
-    price: "£29",
+    name: "Pro",
+    price: "£15",
     period: "/mo",
-    description: "We handle updates & enquiries for you.",
+    description: "An essential web prescence, with limits removed and ai tools.",
     features: [
-      "Everything in Foundation",
-      "Enquiry Management System",
-      "1 Hour Content Updates/mo",
+      "Everything in Free",
+      "No limits",
+      "AI tooling",
       "Priority Email Support",
+      "Custom Domain",
+      "SMS Notifications",
+      "Priority Support",
+      "Advanced SEO",
     ],
     icon: Shield,
     color: "bg-indigo-100 text-indigo-600",

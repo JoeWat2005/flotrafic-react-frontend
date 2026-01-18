@@ -77,52 +77,61 @@ export default function DashboardBookings() {
   };
 
   const handleCreate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-    setFormError(null);
+  e.preventDefault();
+  setSubmitting(true);
+  setFormError(null);
 
-    try {
-      const payload: any = {
-        start_time: new Date(formData.start).toISOString(),
-        end_time: new Date(formData.end).toISOString(),
-        business_id: 0, // This will be ignored/overwritten by the backend based on auth token
-      };
+  try {
+    if (!formData.enquiryId) {
+      throw new Error("An enquiry must be selected to create a booking");
+    }
 
-      if (formData.enquiryId) {
-        payload.enquiry_id = parseInt(formData.enquiryId);
-      }
+    const payload = {
+      start_time: new Date(formData.start).toISOString(),
+      end_time: new Date(formData.end).toISOString(),
+    };
 
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/bookings/`, {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/bookings/from-enquiry/${formData.enquiryId}`,
+      {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.detail || "Failed to create booking");
       }
+    );
 
-      setIsModalOpen(false);
-      setFormData({ start: "", end: "", enquiryId: "" });
-      
-      // Refresh bookings
-      const updatedRes = await fetch(`${import.meta.env.VITE_API_URL}/bookings/`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (updatedRes.ok) {
-        setBookings(await updatedRes.json());
-      }
-
-    } catch (err: any) {
-      setFormError(err.message);
-    } finally {
-      setSubmitting(false);
+    if (!res.ok) {
+      const data = await res.json();
+      throw new Error(data.detail || "Failed to create booking");
     }
-  };
+
+    // Close modal + reset form
+    setIsModalOpen(false);
+    setFormData({ start: "", end: "", enquiryId: "" });
+
+    // Refresh bookings list
+    const updatedRes = await fetch(
+      `${import.meta.env.VITE_API_URL}/bookings/`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (updatedRes.ok) {
+      setBookings(await updatedRes.json());
+    }
+
+  } catch (err: any) {
+    setFormError(err.message);
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   if (loading) return (
     <div className="flex items-center justify-center h-64">
