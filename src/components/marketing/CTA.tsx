@@ -1,30 +1,32 @@
 import { ArrowRight } from "lucide-react";
 
 interface CTAProps {
-  onGetStarted: () => void;
+  onGetStarted: (mode?: "login" | "signup") => void;
 }
 
 export default function CTA({ onGetStarted }: CTAProps) {
   return (
-    <section className="py-24 bg-white border-t border-gray-100">
-      <div className="max-w-5xl mx-auto px-6 text-center">
-        <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-          Start growing your business today
+    <section className="py-20 bg-slate-50">
+      <div className="max-w-3xl mx-auto px-6 text-center">
+        
+        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
+          Ready to get started?
         </h2>
-        <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
-          Join the service businesses that are saving time and booking more jobs with Flotrafic.
+        
+        <p className="text-xl text-slate-600 mb-8">
+          Join businesses launching online with Flotrafic.
         </p>
         
         <button
-          onClick={onGetStarted}
-          className="inline-flex items-center gap-2 bg-indigo-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-indigo-700 transition-all shadow-lg hover:shadow-indigo-200 hover:-translate-y-1"
+          onClick={() => onGetStarted("signup")}
+          className="inline-flex items-center gap-2 bg-indigo-600 text-white px-8 py-4 rounded-lg text-base font-semibold hover:bg-indigo-700 transition-colors"
         >
-          Get started for free
+          Get started free
           <ArrowRight className="h-5 w-5" />
         </button>
         
-        <p className="mt-6 text-sm text-gray-500">
-          No credit card required for Foundation plan setup.
+        <p className="mt-4 text-sm text-slate-500">
+          No credit card required
         </p>
       </div>
     </section>

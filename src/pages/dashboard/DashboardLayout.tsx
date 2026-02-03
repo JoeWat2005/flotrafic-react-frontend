@@ -145,7 +145,6 @@ export default function DashboardLayout() {
              >
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
-            <h1 className="text-lg font-semibold text-gray-900 md:hidden">Flotrafic</h1>
           </div>
 
           <div className="flex items-center gap-4">

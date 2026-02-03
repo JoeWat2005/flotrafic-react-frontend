@@ -6,6 +6,7 @@ import AuthModal from "../../features/auth/AuthModal";
 export default function PublicLayout() {
   const [isAuthed, setIsAuthed] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "signup">("login");
 
   useEffect(() => {
     setIsAuthed(!!localStorage.getItem("token"));
@@ -17,13 +18,25 @@ export default function PublicLayout() {
     window.location.href = "/";
   };
 
-  const openAuth = () => setAuthOpen(true);
+  const openAuth = (mode: "login" | "signup" = "login") => {
+    setAuthMode(mode);
+    setAuthOpen(true);
+  };
 
   return (
     <>
-      <Navbar isAuthed={isAuthed} onLogin={openAuth} onLogout={logout} />
+      <Navbar 
+        isAuthed={isAuthed} 
+        onLogin={() => openAuth("login")} 
+        onSignup={() => openAuth("signup")}
+        onLogout={logout} 
+      />
       <Outlet context={{ openAuth }} />
-      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
+      <AuthModal 
+        open={authOpen} 
+        onClose={() => setAuthOpen(false)} 
+        initialMode={authMode}
+      />
     </>
   );
 }

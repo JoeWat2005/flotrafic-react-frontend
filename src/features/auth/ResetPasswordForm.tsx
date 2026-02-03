@@ -17,84 +17,93 @@ export function ResetPasswordForm({
   resetPassword,
   captchaKey,
   setCaptchaToken,
+  loading,
 }: any) {
-  const showMismatch =
-    confirmResetPassword.length > 0 && !resetPasswordsMatch;
+  const showMismatch = confirmResetPassword.length > 0 && !resetPasswordsMatch;
 
   return (
     <div className="space-y-4">
-      <p className="text-center text-sm text-gray-600">
-        Enter the 6-digit code sent to <strong>{email}</strong>
+      <p className="text-center text-sm text-slate-600 mb-4">
+        Enter the 6-digit code sent to <strong className="text-slate-900">{email}</strong>
       </p>
 
       {/* Code */}
-      <input
-        value={resetCode}
-        onChange={(e) =>
-          setResetCode(e.target.value.replace(/\D/g, "").slice(0, 6))
-        }
-        placeholder="- - - - - -"
-        className="
-          mx-auto block w-40 rounded-lg border px-4 py-3
-          text-center text-lg tracking-widest
-          focus:outline-none focus:ring-2 focus:ring-indigo-500
-        "
-      />
-
-      {/* Strength */}
-      <div className="text-sm text-gray-600">
-        Password Strength:{" "}
-        <span
-          className={
-            resetPasswordStrength >= 3
-              ? "text-green-600"
-              : resetPasswordStrength >= 2
-              ? "text-orange-500"
-              : "text-red-500"
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-1.5 text-center">
+          Reset code
+        </label>
+        <input
+          value={resetCode}
+          onChange={(e) =>
+            setResetCode(e.target.value.replace(/\D/g, "").slice(0, 6))
           }
-        >
-          {["Weak", "Okay", "Good", "Strong"][resetPasswordStrength]}
-        </span>
-        {resetPasswordStrength < 2 && (
-          <div className="text-xs text-gray-500">
-            Use at least 8 characters, a number, and a symbol
+          placeholder="000000"
+          maxLength={6}
+          className="mx-auto block w-40 rounded-lg border border-slate-300 px-4 py-3 text-center text-lg font-mono tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+        />
+      </div>
+
+      {/* New password */}
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-1.5">
+          New password
+        </label>
+        <input
+          type="password"
+          placeholder="••••••••"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          className={`w-full rounded-lg border px-4 py-2.5 focus:outline-none focus:ring-2 transition-shadow ${
+            showMismatch
+              ? "border-red-400 focus:ring-red-400"
+              : "border-slate-300 focus:ring-indigo-500 focus:border-transparent"
+          }`}
+        />
+        {/* Strength indicator */}
+        {newPassword && (
+          <div className="mt-1.5 text-xs">
+            <span className="text-slate-600">Strength: </span>
+            <span
+              className={
+                resetPasswordStrength >= 3
+                  ? "text-green-600 font-medium"
+                  : resetPasswordStrength >= 2
+                  ? "text-orange-500 font-medium"
+                  : "text-red-600 font-medium"
+              }
+            >
+              {["Weak", "Fair", "Good", "Strong"][resetPasswordStrength]}
+            </span>
+            {resetPasswordStrength < 2 && (
+              <span className="block text-slate-500 mt-0.5">
+                Use 8+ characters with numbers and symbols
+              </span>
+            )}
           </div>
         )}
       </div>
 
-      {/* New password */}
-      <input
-        type="password"
-        placeholder="New password"
-        value={newPassword}
-        onChange={(e) => setNewPassword(e.target.value)}
-        className={`w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 ${
-          showMismatch
-            ? "border-red-400 focus:ring-red-400"
-            : "focus:ring-indigo-500"
-        }`}
-      />
-
       {/* Confirm password */}
       <div>
+        <label className="block text-sm font-medium text-slate-700 mb-1.5">
+          Confirm new password
+        </label>
         <input
           type="password"
-          placeholder="Confirm new password"
+          placeholder="••••••••"
           value={confirmResetPassword}
           onChange={(e) => setConfirmResetPassword(e.target.value)}
-          className={`w-full rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 ${
+          className={`w-full rounded-lg border px-4 py-2.5 focus:outline-none focus:ring-2 transition-shadow ${
             showMismatch
               ? "border-red-400 focus:ring-red-400"
-              : "focus:ring-indigo-500"
+              : "border-slate-300 focus:ring-indigo-500 focus:border-transparent"
           }`}
         />
-        <div className="min-h-[16px]">
-          {showMismatch && (
-            <p className="text-xs text-left text-red-500">
-              Passwords do not match
-            </p>
-          )}
-        </div>
+        {showMismatch && (
+          <p className="text-xs text-red-600 mt-1">
+            Passwords do not match
+          </p>
+        )}
       </div>
 
       {/* Turnstile */}
@@ -106,24 +115,16 @@ export function ResetPasswordForm({
         />
       </div>
 
+      <p className="text-xs text-slate-400 text-center">Protected by Cloudflare Turnstile</p>
+
       {/* Button */}
-      <div className="flex justify-center">
-        <button
-          disabled={!resetValid}
-          onClick={resetPassword}
-          className="
-            mt-4 inline-flex items-center justify-center
-            rounded-lg bg-indigo-600 px-6 py-3
-            text-sm font-medium text-white
-            transition-all duration-200
-            hover:bg-indigo-700 hover:scale-[1.02]
-            disabled:opacity-40 disabled:cursor-not-allowed
-            disabled:hover:scale-100
-          "
-        >
-          Reset password
-        </button>
-      </div>
+      <button
+        disabled={!resetValid || loading}
+        onClick={resetPassword}
+        className="w-full rounded-lg bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {loading ? "Resetting..." : "Reset password"}
+      </button>
     </div>
   );
 }

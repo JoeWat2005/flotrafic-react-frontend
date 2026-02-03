@@ -4,8 +4,8 @@ import { RESEND_COOLDOWN } from "./constants";
 import { isEmailValid } from "./validation";
 import { getPasswordStrength } from "../../utils/passwordStrength";
 
-export function useAuth(open: boolean, onClose?: () => void) {
-  const [mode, setMode] = useState<AuthMode>("login");
+export function useAuth(open: boolean, onClose?: () => void, initialMode: "login" | "signup" = "login") {
+  const [mode, setMode] = useState<AuthMode>(initialMode);
 
   // shared
   const [email, setEmail] = useState("");
@@ -90,8 +90,8 @@ export function useAuth(open: boolean, onClose?: () => void) {
   useEffect(() => {
     if (!open) return;
 
-    // Reset modal state on open (preserves your old behaviour)
-    setMode("login");
+    // Reset modal state on open and set initial mode
+    setMode(initialMode);
     setEmail("");
     setPassword("");
     setConfirmPassword("");
@@ -110,7 +110,7 @@ export function useAuth(open: boolean, onClose?: () => void) {
 
     setLoading(false);
     setMessage("");
-  }, [open]);
+  }, [open, initialMode]);
 
   // Countdown tick
   useEffect(() => {
@@ -144,7 +144,6 @@ export function useAuth(open: boolean, onClose?: () => void) {
         body: JSON.stringify({ email }),
       });
 
-      // enumeration-safe UX message
       setMessage("If the account exists, a new code has been sent.");
     } catch {
       setMessage("Could not resend code. Please try again.");
@@ -177,7 +176,6 @@ export function useAuth(open: boolean, onClose?: () => void) {
 
         localStorage.setItem("token", token);
 
-        // ✅ Fetch /me to get the business slug (or name)
         const meRes = await fetch("http://localhost:8000/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -187,7 +185,6 @@ export function useAuth(open: boolean, onClose?: () => void) {
         }
 
         const me = await meRes.json();
-
         const slug = me.slug as string;
 
         if (!slug) {
@@ -211,7 +208,6 @@ export function useAuth(open: boolean, onClose?: () => void) {
             password,
             confirm_password: confirmPassword,
             tier,
-            // if your backend expects captcha_token during signup, add it here later
           }),
         });
 
@@ -225,7 +221,7 @@ export function useAuth(open: boolean, onClose?: () => void) {
         return;
       }
 
-      // ---------- VERIFY (existing flow preserved) ----------
+      // ---------- VERIFY ----------
       if (mode === "verify") {
         if (!verifyValid) return;
 
@@ -247,7 +243,6 @@ export function useAuth(open: boolean, onClose?: () => void) {
           throw new Error(err.detail || "Invalid verification code");
         }
 
-        // Login to get token
         const loginRes = await fetch("http://localhost:8000/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -273,7 +268,7 @@ export function useAuth(open: boolean, onClose?: () => void) {
           return;
         }
 
-        // PRO TIER -> Stripe
+        // PRO TIER -> Stripe (future)
         const stripeRes = await fetch("http://localhost:8000/auth/start-checkout", {
           method: "POST",
           headers: {
@@ -293,7 +288,6 @@ export function useAuth(open: boolean, onClose?: () => void) {
     } catch (e: any) {
       setMessage(e.message || "Something went wrong");
 
-      // refresh captcha on verify errors
       if (mode === "verify") {
         setCaptchaToken(null);
         setCaptchaKey((k) => k + 1);
@@ -304,7 +298,7 @@ export function useAuth(open: boolean, onClose?: () => void) {
   };
 
   // -------------------------
-  // Password reset (NEW)
+  // Password reset
   // -------------------------
   const requestPasswordReset = async () => {
     if (!emailValid) return;
@@ -319,7 +313,6 @@ export function useAuth(open: boolean, onClose?: () => void) {
         body: JSON.stringify({ email }),
       });
 
-      // enum-safe: always proceed
       setMessage("If the account exists, a reset code has been sent.");
       setMode("reset-confirm");
       setResetCode("");
@@ -359,8 +352,6 @@ export function useAuth(open: boolean, onClose?: () => void) {
 
       setMessage("Password updated. You can now log in.");
       setMode("login");
-
-      // For convenience, preload login password field (optional)
       setPassword("");
       setConfirmPassword("");
     } catch (e: any) {
@@ -373,16 +364,11 @@ export function useAuth(open: boolean, onClose?: () => void) {
   };
 
   return {
-    // mode
     mode,
     setMode,
-
-    // shared
     email,
     setEmail,
     emailValid,
-
-    // login/signup
     name,
     setName,
     tier,
@@ -395,8 +381,6 @@ export function useAuth(open: boolean, onClose?: () => void) {
     passwordsMatch,
     loginValid,
     signupValid,
-
-    // verify
     verificationCode,
     setVerificationCode,
     captchaToken,
@@ -406,8 +390,6 @@ export function useAuth(open: boolean, onClose?: () => void) {
     resendCooldown,
     resendCode,
     verifyValid,
-
-    // reset
     resetCode,
     setResetCode,
     newPassword,
@@ -419,13 +401,9 @@ export function useAuth(open: boolean, onClose?: () => void) {
     resetValid,
     requestPasswordReset,
     resetPassword,
-
-    // ui
     loading,
     message,
     submit,
-
-    // optional close callback compatibility
     onClose,
   };
 }

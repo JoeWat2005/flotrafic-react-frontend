@@ -3,12 +3,13 @@ import Navbar from "./Navbar";
 import AuthModal from "../../features/auth/AuthModal";
 
 interface LayoutProps {
-  children: (openAuth: () => void) => React.ReactNode;
+  children: (openAuth: (mode?: "login" | "signup") => void) => React.ReactNode;
 }
 
 export default function Layout({ children }: LayoutProps) {
   const [isAuthed, setIsAuthed] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "signup">("login");
 
   useEffect(() => {
     setIsAuthed(!!localStorage.getItem("token"));
@@ -20,16 +21,27 @@ export default function Layout({ children }: LayoutProps) {
     window.location.href = "/";
   };
 
-  const openAuth = () => setAuthOpen(true);
+  const openAuth = (mode: "login" | "signup" = "login") => {
+    setAuthMode(mode);
+    setAuthOpen(true);
+  };
 
   return (
     <>
-      <Navbar isAuthed={isAuthed} onLogin={openAuth} onLogout={logout} />
+      <Navbar 
+        isAuthed={isAuthed} 
+        onLogin={() => openAuth("login")} 
+        onSignup={() => openAuth("signup")}
+        onLogout={logout} 
+      />
       {children(openAuth)}
-      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
+      <AuthModal 
+        open={authOpen} 
+        onClose={() => setAuthOpen(false)} 
+        initialMode={authMode}
+      />
     </>
   );
 }
-
 
 

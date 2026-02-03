@@ -1,22 +1,17 @@
 import logo from "../../assets/flotrafic.png";
 import { useMemo } from "react";
-import { LayoutDashboard, LogOut } from "lucide-react";
 
 interface NavbarProps {
   isAuthed: boolean;
   onLogin: () => void;
+  onSignup: () => void;
   onLogout: () => void;
 }
 
-export default function Navbar({
-  isAuthed,
-  onLogin,
-  onLogout,
-}: NavbarProps) {
+export default function Navbar({ isAuthed, onLogin, onSignup, onLogout }: NavbarProps) {
   const path = window.location.pathname;
   const isDashboard = path.includes("/dashboard");
 
-  // Extract slug from /:slug or /:slug/dashboard
   const slug = useMemo(() => {
     const parts = path.split("/").filter(Boolean);
     return parts.length > 0 ? parts[0] : null;
@@ -31,67 +26,54 @@ export default function Navbar({
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+      <div className="max-w-6xl mx-auto px-6">
         <div className="flex justify-between items-center h-16">
+          
           {/* Logo */}
-          <div className="flex-shrink-0 flex items-center gap-2 cursor-pointer" onClick={() => window.location.href = "/"}>
-            <img
-              src={logo}
-              alt="Flotrafic"
-              className="h-8 w-auto"
-            />
-            <span className="font-bold text-xl text-gray-900 tracking-tight hidden sm:block"></span>
+          <div 
+            className="flex items-center gap-2 cursor-pointer" 
+            onClick={() => window.location.href = "/"}
+          >
+            <img src={logo} alt="Flotrafic" className="h-8" />
           </div>
 
           {/* Actions */}
           <div className="flex items-center gap-3">
             {!isAuthed ? (
-              <div className="flex items-center gap-3">
+              <>
                 <button
                   onClick={onLogin}
-                  className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                  className="text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors px-4 py-2"
                 >
                   Log in
                 </button>
                 <button
-                  onClick={onLogin}
-                  className="rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition-all shadow-sm hover:shadow-indigo-200"
+                  onClick={onSignup}
+                  className="bg-indigo-600 px-4 py-2 rounded-lg text-sm font-medium text-white hover:bg-indigo-700 transition-colors"
                 >
-                  Get Started
+                  Get started
                 </button>
-              </div>
+              </>
             ) : slug ? (
               <>
-                {!isDashboard ? (
-                  <button
-                    onClick={goToDashboard}
-                    className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-                  >
-                    <LayoutDashboard className="h-4 w-4 text-gray-500" />
-                    Dashboard
-                  </button>
-                ) : (
-                  <button
-                    onClick={goToSite}
-                    className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-                  >
-                    View Site
-                  </button>
-                )}
-
+                <button
+                  onClick={isDashboard ? goToSite : goToDashboard}
+                  className="text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors px-4 py-2"
+                >
+                  {isDashboard ? "View site" : "Dashboard"}
+                </button>
                 <button
                   onClick={onLogout}
-                  className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-red-600 transition-colors px-2"
-                  title="Sign out"
+                  className="text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors px-4 py-2"
                 >
-                  <LogOut className="h-4 w-4" />
+                  Log out
                 </button>
               </>
             ) : (
               <button
                 onClick={onLogout}
-                className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                className="text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors px-4 py-2"
               >
                 Log out
               </button>
