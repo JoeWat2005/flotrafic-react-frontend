@@ -1,8 +1,11 @@
+> [!WARNING]
+> **Deprecated: no longer maintained.** Last updated in February 2026; kept for reference.
+
 # Flotrafic frontend
 
 React single-page app for Flotrafic, a platform that gives small businesses a hosted website and a dashboard for enquiries, bookings and billing.
 
-Status: beta, last updated February 2026. Flotrafic is an earlier product that preceded [DeskCaptain](https://github.com/JoeWat2005/deskcaptain).
+Status: deprecated beta, last updated February 2026. Flotrafic is an earlier product that preceded [DeskCaptain](https://github.com/JoeWat2005/deskcaptain).
 
 ## Features
 
